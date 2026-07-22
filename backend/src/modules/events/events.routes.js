@@ -1,8 +1,8 @@
 const router = require('express').Router();
 const ctrl   = require('./events.controller');
-const { authenticate }  = require('../../middleware/auth.middleware');
+const { authenticate, authorize } = require('../../middleware/auth.middleware');
 const { requireTenant } = require('../../middleware/tenant.middleware');
-const { authorize }     = require('../../middleware/rbac.middleware');
+
 const { validate }      = require('../../middleware/validate.middleware');
 const { createEventSchema, updateEventSchema, issueCertSchema } = require('./events.schema');
 

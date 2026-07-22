@@ -1,8 +1,8 @@
 const router = require('express').Router();
 const ctrl   = require('./health.controller');
-const { authenticate }  = require('../../middleware/auth.middleware');
+const { authenticate, authorize } = require('../../middleware/auth.middleware');
 const { requireTenant } = require('../../middleware/tenant.middleware');
-const { authorize }     = require('../../middleware/rbac.middleware');
+
 const { validate }      = require('../../middleware/validate.middleware');
 const { upsertHealthRecordSchema, createVisitSchema, updateVisitSchema } = require('./health.schema');
 

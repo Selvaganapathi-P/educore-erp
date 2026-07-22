@@ -1,8 +1,8 @@
 const router = require('express').Router();
 const ctrl   = require('./reports.controller');
-const { authenticate }  = require('../../middleware/auth.middleware');
+const { authenticate, authorize } = require('../../middleware/auth.middleware');
 const { requireTenant } = require('../../middleware/tenant.middleware');
-const { authorize }     = require('../../middleware/rbac.middleware');
+
 
 const REPORT_ROLES = ['school_admin','principal','vice_principal','accountant','hr'];
 

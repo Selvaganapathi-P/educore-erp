@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: educore-api
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install --omit=dev
+    startCommand: node src/server.js
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      # Set these in the Render dashboard (mark as Secret):
+      # MONGO_URI          — your Atlas connection string
+      # JWT_SECRET         — 64-char random hex
+      # JWT_REFRESH_SECRET — 64-char random hex (different from above)
+      # CLIENT_URL         — your Vercel frontend URL  e.g. https://educore.vercel.app
+      # SMTP_HOST / SMTP_PORT / SMTP_USER / SMTP_PASS / EMAIL_FROM
+      # ANTHROPIC_API_KEY  — optional, for AI features
+      # SUPER_ADMIN_EMAIL / SUPER_ADMIN_PASSWORD

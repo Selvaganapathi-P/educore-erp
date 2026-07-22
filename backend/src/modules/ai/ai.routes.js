@@ -1,7 +1,6 @@
 const router = require('express').Router();
-const { authenticate } = require('../../middleware/auth');
-const { requireTenant } = require('../../middleware/tenant');
-const { authorize } = require('../../middleware/authorize');
+const { authenticate, authorize } = require('../../middleware/auth.middleware');
+const { requireTenant } = require('../../middleware/tenant.middleware');
 const ctrl = require('./ai.controller');
 
 const AI_ROLES = ['school_admin','principal','vice_principal','teacher','accountant','hr'];

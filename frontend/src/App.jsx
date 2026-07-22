@@ -14,10 +14,14 @@ import { SuperAdminLayout } from './components/layout/SuperAdminLayout';
 import DashboardPage from './pages/dashboard/DashboardPage';
 
 // Super Admin pages
-import SuperAdminDashboard from './pages/super-admin/SuperAdminDashboard';
-import SchoolsPage         from './pages/super-admin/SchoolsPage';
-import SchoolFormPage      from './pages/super-admin/SchoolFormPage';
-import SchoolDetailPage    from './pages/super-admin/SchoolDetailPage';
+import SuperAdminDashboard    from './pages/super-admin/SuperAdminDashboard';
+import SchoolsPage             from './pages/super-admin/SchoolsPage';
+import SchoolFormPage          from './pages/super-admin/SchoolFormPage';
+import SchoolDetailPage        from './pages/super-admin/SchoolDetailPage';
+import SuperAdminUsersPage     from './pages/super-admin/SuperAdminUsersPage';
+import BillingPage             from './pages/super-admin/BillingPage';
+import SupportPage             from './pages/super-admin/SupportPage';
+import SuperAdminSettingsPage  from './pages/super-admin/SuperAdminSettingsPage';
 
 // School Admin pages
 import SettingsPage from './pages/school-admin/settings/SettingsPage';
@@ -156,7 +160,11 @@ export default function App() {
         <Route path="schools"     element={<SchoolsPage />} />
         <Route path="schools/new" element={<SchoolFormPage />} />
         <Route path="schools/:id" element={<SchoolDetailPage />} />
-        <Route path="schools/:id/edit" element={<SchoolFormPage />} />
+        <Route path="schools/:id/edit"  element={<SchoolFormPage />} />
+        <Route path="users"             element={<SuperAdminUsersPage />} />
+        <Route path="billing"           element={<BillingPage />} />
+        <Route path="support"           element={<SupportPage />} />
+        <Route path="settings"          element={<SuperAdminSettingsPage />} />
       </Route>
 
       {/* School portal — inside AppLayout */}

@@ -1,4 +1,4 @@
-const asyncHandler = require('express-async-handler');
+const { asyncHandler } = require('../../utils/asyncHandler');
 const svc = require('./ai.service');
 
 // POST /api/ai/chat  — streaming SSE

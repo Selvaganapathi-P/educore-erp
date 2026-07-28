@@ -1,137 +1,67 @@
-const express       = require('express');
-const cors          = require('cors');
-const helmet        = require('helmet');
-const morgan        = require('morgan');
-const compression   = require('compression');
-const cookieParser  = require('cookie-parser');
-const mongoSanitize = require('express-mongo-sanitize');
-const rateLimit     = require('express-rate-limit');
+const express      = require('express');
+const cors         = require('cors');
+const helmet       = require('helmet');
+const cookieParser = require('cookie-parser');
+const rateLimit    = require('express-rate-limit');
 
-const { env }    = require('./config/env');
-const { logger } = require('./utils/logger');
-const { notFound, errorHandler } = require('./middleware/error.middleware');
-const { aiLimiter, helmetOptions, sanitizeRequest } = require('./middleware/security.middleware');
-
-const authRoutes     = require('./modules/auth/auth.routes');
-const userRoutes     = require('./modules/users/user.routes');
-const schoolRoutes   = require('./modules/schools/school.routes');
-const settingsRoutes = require('./modules/settings/settings.routes');
-const platformRoutes = require('./modules/platform/platform.routes');
-const roleRoutes      = require('./modules/roles/role.routes');
-const admissionRoutes = require('./modules/admissions/admission.routes');
-const studentRoutes   = require('./modules/students/student.routes');
-const staffRoutes     = require('./modules/staff/staff.routes');
-const academicRoutes    = require('./modules/academics/academics.routes');
-const attendanceRoutes  = require('./modules/attendance/attendance.routes');
-const homeworkRoutes    = require('./modules/homework/homework.routes');
-const examRoutes        = require('./modules/exams/exam.routes');
-const feesRoutes          = require('./modules/fees/fees.routes');
-const communicationRoutes = require('./modules/communication/communication.routes');
-const libraryRoutes       = require('./modules/library/library.routes');
-const transportRoutes     = require('./modules/transport/transport.routes');
-const hostelRoutes        = require('./modules/hostel/hostel.routes');
-const inventoryRoutes     = require('./modules/inventory/inventory.routes');
-const healthRoutes        = require('./modules/health/health.routes');
-const eventsRoutes        = require('./modules/events/events.routes');
-const reportsRoutes       = require('./modules/reports/reports.routes');
-const aiRoutes            = require('./modules/ai/ai.routes');
+const authRoutes       = require('./routes/auth.routes');
+const studentRoutes    = require('./routes/student.routes');
+const attendanceRoutes = require('./routes/attendance.routes');
+const resultRoutes     = require('./routes/result.routes');
+const feeRoutes        = require('./routes/fee.routes');
+const publicRoutes     = require('./routes/public.routes');
 
 const app = express();
 
-// ── Security ────────────────────────────────────────────────────────────────
-app.use(helmet(helmetOptions()));
-
-// Allow production origin + Vercel preview URLs (*.vercel.app)
-const allowedOrigins = [
-  env.CLIENT_URL,
-  /https:\/\/.*\.vercel\.app$/,
-].filter(Boolean);
-
-app.use(cors({
-  origin: (origin, cb) => {
-    // Allow server-to-server (no origin) and matched origins
-    if (!origin) return cb(null, true);
-    const ok = allowedOrigins.some(o =>
-      typeof o === 'string' ? o === origin : o.test(origin)
-    );
-    cb(ok ? null : new Error(`CORS: origin ${origin} not allowed`), ok);
-  },
-  credentials:    true,
-  methods:        ['GET','POST','PUT','PATCH','DELETE','OPTIONS'],
-  allowedHeaders: ['Content-Type','Authorization'],
-}));
+// Trust proxy (Render / Vercel)
 app.set('trust proxy', 1);
 
-const globalLimiter = rateLimit({
+// Security
+app.use(helmet());
+
+// CORS
+const allowedOrigins = (process.env.ALLOWED_ORIGINS || 'http://localhost:5173').split(',').map(o => o.trim());
+app.use(cors({
+  origin: (origin, cb) => {
+    if (!origin || allowedOrigins.includes(origin)) return cb(null, true);
+    cb(new Error('Not allowed by CORS'));
+  },
+  credentials: true,
+}));
+
+// Rate limiting
+const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max:      300,
+  max: 100,
+  keyGenerator: (req) => req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.ip,
   standardHeaders: true,
-  legacyHeaders:   false,
-  message: { success: false, message: 'Too many requests — try again later.' },
+  legacyHeaders: false,
 });
+app.use('/api/auth', limiter);
 
-const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max:      20,
-  message: { success: false, message: 'Too many login attempts — wait 15 minutes.' },
-});
-
-// ── Body / Cookies ──────────────────────────────────────────────────────────
-app.use(compression());
+// Body parsers
 app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(mongoSanitize());
-app.use(sanitizeRequest);
 
-// ── Logging ─────────────────────────────────────────────────────────────────
-app.use(env.isDev
-  ? morgan('dev')
-  : morgan('combined', { stream: { write: (m) => logger.http(m.trim()) } })
-);
+// Routes
+app.use('/api/auth',       authRoutes);
+app.use('/api/students',   studentRoutes);
+app.use('/api/attendance', attendanceRoutes);
+app.use('/api/results',    resultRoutes);
+app.use('/api/fees',       feeRoutes);
+app.use('/api/public',     publicRoutes);
 
-// ── Health ───────────────────────────────────────────────────────────────────
-app.get('/health', async (_req, res) => {
-  const mongoose = require('mongoose');
-  const dbState  = ['disconnected','connected','connecting','disconnecting'];
-  res.json({
-    status:    'ok',
-    timestamp: new Date().toISOString(),
-    env:       env.NODE_ENV,
-    db:        dbState[mongoose.connection.readyState] ?? 'unknown',
-    uptime:    Math.floor(process.uptime()),
-    mem:       process.memoryUsage().rss,
-  });
+// Health
+app.get('/health', (_, res) => res.json({ status: 'ok' }));
+
+// 404
+app.use((req, res) => res.status(404).json({ success: false, message: 'Route not found' }));
+
+// Error handler
+app.use((err, req, res, next) => {
+  console.error(err.message);
+  res.status(err.status || 500).json({ success: false, message: err.message || 'Server error' });
 });
-
-// ── Routes ───────────────────────────────────────────────────────────────────
-app.use('/api', globalLimiter);
-app.use('/api/auth',     authLimiter, authRoutes);
-app.use('/api/users',    userRoutes);
-app.use('/api/schools',  schoolRoutes);
-app.use('/api/settings', settingsRoutes);
-app.use('/api/platform', platformRoutes);
-app.use('/api/roles',      roleRoutes);
-app.use('/api/admissions', admissionRoutes);
-app.use('/api/students',  studentRoutes);
-app.use('/api/staff',     staffRoutes);
-app.use('/api/academics',   academicRoutes);
-app.use('/api/attendance',  attendanceRoutes);
-app.use('/api/homework',    homeworkRoutes);
-app.use('/api/exams',       examRoutes);
-app.use('/api/fees',          feesRoutes);
-app.use('/api/communication', communicationRoutes);
-app.use('/api/library',      libraryRoutes);
-app.use('/api/transport',    transportRoutes);
-app.use('/api/hostel',       hostelRoutes);
-app.use('/api/inventory',    inventoryRoutes);
-app.use('/api/health',       healthRoutes);
-app.use('/api/events',       eventsRoutes);
-app.use('/api/reports',      reportsRoutes);
-app.use('/api/ai',           aiLimiter, aiRoutes);
-
-// ── 404 & Error ──────────────────────────────────────────────────────────────
-app.use(notFound);
-app.use(errorHandler);
 
 module.exports = app;

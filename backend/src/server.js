@@ -1,44 +1,37 @@
-const mongoose      = require('mongoose');
-const { env }       = require('./config/env');
-const { connectDB } = require('./config/database');
-const { logger }    = require('./utils/logger');
-const app           = require('./app');
+require('dotenv').config();
+const mongoose = require('mongoose');
+const app      = require('./app');
+
+const PORT     = process.env.PORT || 5000;
+const MONGO_URI = process.env.MONGO_URI || process.env.DATABASE_URL;
 
 const start = async () => {
-  await connectDB();
+  try {
+    await mongoose.connect(MONGO_URI, {
+      maxPoolSize: 10,
+      serverSelectionTimeoutMS: 10000,
+    });
+    console.log('MongoDB connected:', mongoose.connection.host);
+  } catch (err) {
+    console.error('MongoDB connection failed:', err.message);
+    process.exit(1);
+  }
 
-  const server = app.listen(env.PORT, () => {
-    logger.info(`EduCore API  ▶  http://localhost:${env.PORT}  [${env.NODE_ENV}]`);
-    // Signal to PM2 cluster that this worker is ready
-    if (process.send) process.send('ready');
+  const server = app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
   });
 
-  const shutdown = async (signal) => {
-    logger.info(`${signal} — graceful shutdown initiated`);
+  const shutdown = (signal) => {
+    console.log(`${signal} received — shutting down`);
     server.close(async () => {
-      try {
-        await mongoose.connection.close(false);
-        logger.info('MongoDB connection closed');
-      } catch (e) {
-        logger.error('Error closing MongoDB:', e);
-      }
-      logger.info('Server closed');
+      await mongoose.connection.close(false);
       process.exit(0);
     });
-    // Force exit after 10 s if connections don't drain
-    setTimeout(() => { logger.warn('Force exit after timeout'); process.exit(1); }, 10_000);
+    setTimeout(() => process.exit(1), 10_000);
   };
 
   process.on('SIGTERM', () => shutdown('SIGTERM'));
   process.on('SIGINT',  () => shutdown('SIGINT'));
-  process.on('unhandledRejection', (reason) => {
-    logger.error('Unhandled rejection:', reason);
-    shutdown('unhandledRejection');
-  });
-  process.on('uncaughtException', (err) => {
-    logger.error('Uncaught exception:', err);
-    shutdown('uncaughtException');
-  });
 };
 
 start();

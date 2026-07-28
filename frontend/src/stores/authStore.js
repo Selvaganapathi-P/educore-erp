@@ -1,55 +1,32 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
 import api from '../lib/axios';
 
-export const useAuthStore = create(
-  persist(
-    (set, get) => ({
-      user:        null,
-      accessToken: null,
-      isLoading:   false,
+const stored = () => {
+  try {
+    return { user: JSON.parse(localStorage.getItem('user')), token: localStorage.getItem('token') };
+  } catch { return { user: null, token: null }; }
+};
 
-      setAccessToken: (token) => set({ accessToken: token }),
+export const useAuthStore = create((set) => ({
+  user:    stored().user,
+  token:   stored().token,
+  student: null,
 
-      login: async (email, password, rememberMe = false) => {
-        set({ isLoading: true });
-        try {
-          const { data } = await api.post('/auth/login', { email, password, rememberMe });
-          set({
-            user:        data.data.user,
-            accessToken: data.data.accessToken,
-            isLoading:   false,
-          });
-          return data.data;
-        } catch (err) {
-          set({ isLoading: false });
-          throw err;
-        }
-      },
+  login: async (email, password) => {
+    const { data } = await api.post('/auth/login', { email, password });
+    const { user, token, studentProfile } = data.data;
+    localStorage.setItem('token', token);
+    localStorage.setItem('user', JSON.stringify(user));
+    set({ user, token, student: studentProfile || null });
+    return user;
+  },
 
-      logout: async () => {
-        try { await api.post('/auth/logout'); } catch { /* silent */ }
-        set({ user: null, accessToken: null });
-      },
+  logout: async () => {
+    try { await api.post('/auth/logout'); } catch { /* silent */ }
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    set({ user: null, token: null, student: null });
+  },
 
-      refreshMe: async () => {
-        try {
-          const { data } = await api.get('/auth/me');
-          set({ user: data.data });
-        } catch { /* expired — let interceptor handle */ }
-      },
-
-      // Helpers
-      isAuthenticated: () => !!get().accessToken && !!get().user,
-      hasRole:         (...roles) => roles.includes(get().user?.role),
-      hasPermission:   (perm) => {
-        const perms = get().user?.permissions || [];
-        return perms.includes('*') || perms.includes(perm);
-      },
-    }),
-    {
-      name:    'educore-auth',
-      partialize: (s) => ({ user: s.user, accessToken: s.accessToken }),
-    }
-  )
-);
+  setStudent: (s) => set({ student: s }),
+}));

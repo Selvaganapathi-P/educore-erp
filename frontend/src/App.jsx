@@ -24,7 +24,8 @@ import SupportPage             from './pages/super-admin/SupportPage';
 import SuperAdminSettingsPage  from './pages/super-admin/SuperAdminSettingsPage';
 
 // School Admin pages
-import SettingsPage from './pages/school-admin/settings/SettingsPage';
+import SettingsPage  from './pages/school-admin/settings/SettingsPage';
+import ParentsPage   from './pages/parents/ParentsPage';
 
 // User & Role management
 import UsersPage from './pages/users/UsersPage';
@@ -171,6 +172,7 @@ export default function App() {
       <Route path="/" element={<PrivateRoute><AppLayout /></PrivateRoute>}>
         <Route index              element={<DashboardPage />} />
         <Route path="settings"    element={<SettingsPage />} />
+        <Route path="parents"     element={<ParentsPage />} />
         <Route path="users"       element={<UsersPage />} />
         <Route path="users/roles" element={<RolesPage />} />
         <Route path="admissions"          element={<AdmissionsPage />} />

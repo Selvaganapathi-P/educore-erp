@@ -1,6 +1,9 @@
 import { Users, GraduationCap, DollarSign, ClipboardCheck, TrendingUp, TrendingDown, ArrowRight } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { useAuthStore } from '../../stores/authStore';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
+import api from '../../lib/axios';
 
 const attendanceData = [
   { day: 'Mon', present: 420, absent: 18 },
@@ -19,11 +22,11 @@ const feeData = [
   { month: 'Jan', collected: 540000, pending: 55000  },
 ];
 
-const STATS = [
-  { label: 'Total Students',    value: '1,248',  change: '+12',   up: true,  icon: GraduationCap, color: 'bg-primary-100 text-primary-600' },
-  { label: 'Active Staff',      value: '86',     change: '+3',    up: true,  icon: Users,          color: 'bg-success-100 text-success-600' },
-  { label: 'Fee Collected',     value: '₹5.4L',  change: '+8.2%', up: true,  icon: DollarSign,    color: 'bg-warning-100 text-warning-600' },
-  { label: 'Attendance Today',  value: '94.2%',  change: '-1.5%', up: false, icon: ClipboardCheck, color: 'bg-info-100 text-info-600'      },
+const STAT_META = [
+  { label: 'Total Students',   key: 'students',   icon: GraduationCap, color: 'bg-primary-100 text-primary-600' },
+  { label: 'Active Staff',     key: 'staff',      icon: Users,          color: 'bg-success-100 text-success-600' },
+  { label: 'Fee Collected',    key: 'feeCollected', icon: DollarSign,   color: 'bg-warning-100 text-warning-600' },
+  { label: 'Attendance Today', key: 'attendance', icon: ClipboardCheck, color: 'bg-info-100 text-info-600'      },
 ];
 
 const RECENT_ADMISSIONS = [
@@ -44,6 +47,27 @@ const fmtINR = (v) => `₹${(v / 100000).toFixed(1)}L`;
 export default function DashboardPage() {
   const user = useAuthStore((s) => s.user);
   const name = user?.profile?.firstName || 'Admin';
+  const nav  = useNavigate();
+
+  const { data: liveStats } = useQuery({
+    queryKey: ['dashboard-stats'],
+    queryFn: () => Promise.allSettled([
+      api.get('/students/stats').then(r => r.data.data),
+      api.get('/staff/stats').then(r => r.data.data),
+    ]).then(([students, staff]) => ({
+      students: students.status === 'fulfilled' ? students.value?.total : null,
+      staff:    staff.status === 'fulfilled'    ? staff.value?.total    : null,
+    })),
+    staleTime: 60_000,
+  });
+
+  const QUICK_ACTIONS = [
+    { label: 'Mark Attendance',    color: 'bg-primary-50 text-primary-700 hover:bg-primary-100', to: '/attendance/mark'              },
+    { label: 'Collect Fee',        color: 'bg-success-50 text-success-700 hover:bg-success-100', to: '/fees/collect'                  },
+    { label: 'New Admission',      color: 'bg-warning-50 text-warning-700 hover:bg-warning-100', to: '/admissions/new'               },
+    { label: 'Issue Library Book', color: 'bg-info-50    text-info-700    hover:bg-info-100',    to: '/library/issue'                 },
+    { label: 'Send Announcement',  color: 'bg-slate-100  text-slate-700   hover:bg-slate-200',   to: '/communication/announcements/new' },
+  ];
 
   return (
     <div className="space-y-6">
@@ -54,28 +78,28 @@ export default function DashboardPage() {
           <p className="page-subtitle">Here's what's happening at your school today.</p>
         </div>
         <div className="flex items-center gap-2">
-          <button className="btn-secondary btn-sm">Download Report</button>
-          <button className="btn-primary btn-sm">+ Add Student</button>
+          <Link to="/reports" className="btn btn-outline btn-sm">Download Report</Link>
+          <Link to="/students/new" className="btn btn-primary btn-sm">+ Add Student</Link>
         </div>
       </div>
 
       {/* KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-        {STATS.map((s) => (
-          <div key={s.label} className="card p-5">
-            <div className="flex items-start justify-between mb-4">
-              <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${s.color}`}>
-                <s.icon className="w-4 h-4" />
+        {STAT_META.map((s) => {
+          const live = liveStats?.[s.key];
+          const display = live != null ? live.toLocaleString('en-IN') : '—';
+          return (
+            <div key={s.label} className="card p-5">
+              <div className="flex items-start justify-between mb-4">
+                <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${s.color}`}>
+                  <s.icon className="w-4 h-4" />
+                </div>
               </div>
-              <span className={`flex items-center gap-0.5 text-xs font-medium ${s.up ? 'text-success-600' : 'text-danger-600'}`}>
-                {s.up ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
-                {s.change}
-              </span>
+              <p className="text-2xl font-bold text-slate-900 tabular-nums">{display}</p>
+              <p className="text-xs text-slate-500 mt-0.5">{s.label}</p>
             </div>
-            <p className="text-2xl font-bold text-slate-900 tabular-nums">{s.value}</p>
-            <p className="text-xs text-slate-500 mt-0.5">{s.label}</p>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* Charts row */}
@@ -142,9 +166,9 @@ export default function DashboardPage() {
         <div className="card lg:col-span-2">
           <div className="card-header">
             <p className="text-sm font-semibold text-slate-800">Recent Admissions</p>
-            <button className="flex items-center gap-1 text-xs text-primary-600 hover:text-primary-700 font-medium">
+            <Link to="/admissions" className="flex items-center gap-1 text-xs text-primary-600 hover:text-primary-700 font-medium">
               View all <ArrowRight className="w-3 h-3" />
-            </button>
+            </Link>
           </div>
           <div className="table-container">
             <table className="table">
@@ -187,15 +211,10 @@ export default function DashboardPage() {
             <p className="text-sm font-semibold text-slate-800">Quick Actions</p>
           </div>
           <div className="card-body space-y-2">
-            {[
-              { label: 'Mark Attendance',     color: 'bg-primary-50 text-primary-700 hover:bg-primary-100' },
-              { label: 'Collect Fee',         color: 'bg-success-50 text-success-700 hover:bg-success-100' },
-              { label: 'New Admission',       color: 'bg-warning-50 text-warning-700 hover:bg-warning-100' },
-              { label: 'Issue Library Book',  color: 'bg-info-50    text-info-700    hover:bg-info-100'    },
-              { label: 'Send Announcement',   color: 'bg-slate-100  text-slate-700   hover:bg-slate-200'   },
-            ].map((a) => (
+            {QUICK_ACTIONS.map((a) => (
               <button
                 key={a.label}
+                onClick={() => nav(a.to)}
                 className={`w-full text-left px-4 py-2.5 rounded-md text-sm font-medium transition-colors ${a.color}`}
               >
                 {a.label}

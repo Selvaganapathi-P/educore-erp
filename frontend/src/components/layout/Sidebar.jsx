@@ -10,7 +10,7 @@ import { useAuthStore } from '../../stores/authStore';
 
 const NAV = [
   { label: 'Dashboard',     icon: LayoutDashboard, href: '/',              roles: [] },
-  { label: 'Schools',       icon: School,           href: '/schools',       roles: ['super_admin'] },
+  { label: 'Schools',       icon: School,           href: '/super-admin/schools', roles: ['super_admin'] },
   {
     label: 'Academics', icon: BookOpen, roles: ['school_admin','principal','vice_principal','teacher'],
     children: [

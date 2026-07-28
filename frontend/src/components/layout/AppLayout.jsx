@@ -1,10 +1,15 @@
 import { useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, Navigate } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import Header  from './Header';
+import { useAuthStore } from '../../stores/authStore';
 
 export default function AppLayout() {
   const [collapsed, setCollapsed] = useState(false);
+  const user = useAuthStore((s) => s.user);
+
+  // Super admin has their own console — redirect them out of the school portal
+  if (user?.role === 'super_admin') return <Navigate to="/super-admin" replace />;
 
   return (
     <div className="min-h-screen bg-slate-50">

@@ -1,40 +1,78 @@
 import { Link } from 'react-router-dom';
-import { School, Phone, Mail, MapPin } from 'lucide-react';
+import { Phone, Mail, MapPin } from 'lucide-react';
+
+const navLinks = [
+  ['/about',      'About Us'],
+  ['/facilities', 'Facilities'],
+  ['/gallery',    'Gallery'],
+  ['/contact',    'Contact'],
+];
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-900 text-gray-300 py-12 mt-auto">
-      <div className="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
+    <footer style={{ background: '#050810', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-16 grid grid-cols-1 md:grid-cols-3 gap-12">
+
+        {/* Brand */}
         <div>
-          <div className="flex items-center gap-2 text-white font-bold text-lg mb-3">
-            <School className="w-5 h-5 text-blue-400" />
-            EduCore School
+          <div className="flex items-center gap-2.5 mb-4">
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center font-black text-white"
+              style={{ background: 'linear-gradient(135deg,#1D4ED8,#7C3AED)' }}>E</div>
+            <span className="font-bold text-white">EduCore School</span>
           </div>
-          <p className="text-sm leading-relaxed">
-            Dedicated to nurturing young minds with quality education, values, and a passion for excellence.
+          <p className="text-slate-500 text-sm leading-relaxed">
+            Empowering students with knowledge, character, and a love for lifelong learning since 1999.
           </p>
+          {/* Decorative line */}
+          <div className="mt-6 h-px w-16" style={{ background: 'linear-gradient(90deg,#1D4ED8,transparent)' }} />
         </div>
 
+        {/* Quick Links */}
         <div>
-          <h4 className="text-white font-semibold mb-3">Quick Links</h4>
-          <ul className="space-y-2 text-sm">
-            {[['/', 'Home'], ['/about', 'About Us'], ['/facilities', 'Facilities'], ['/gallery', 'Gallery'], ['/contact', 'Contact']].map(([to, label]) => (
-              <li key={to}><Link to={to} className="hover:text-white transition-colors">{label}</Link></li>
+          <p className="text-xs font-semibold tracking-widest uppercase text-slate-500 mb-5">Navigation</p>
+          <ul className="space-y-3">
+            {navLinks.map(([to, label]) => (
+              <li key={to}>
+                <Link to={to} className="text-slate-400 text-sm hover:text-white transition-colors flex items-center gap-2 group">
+                  <span className="w-1 h-1 rounded-full bg-blue-600 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  {label}
+                </Link>
+              </li>
             ))}
+            <li>
+              <Link to="/login" className="text-slate-400 text-sm hover:text-white transition-colors flex items-center gap-2 group">
+                <span className="w-1 h-1 rounded-full bg-blue-600 opacity-0 group-hover:opacity-100 transition-opacity" />
+                Student / Staff Login
+              </Link>
+            </li>
           </ul>
         </div>
 
+        {/* Contact */}
         <div>
-          <h4 className="text-white font-semibold mb-3">Contact</h4>
-          <ul className="space-y-2 text-sm">
-            <li className="flex items-start gap-2"><MapPin className="w-4 h-4 mt-0.5 flex-shrink-0 text-blue-400" /> 123 School Road, City, State 600001</li>
-            <li className="flex items-center gap-2"><Phone className="w-4 h-4 flex-shrink-0 text-blue-400" /> +91 98765 43210</li>
-            <li className="flex items-center gap-2"><Mail className="w-4 h-4 flex-shrink-0 text-blue-400" /> info@educoreshool.edu.in</li>
+          <p className="text-xs font-semibold tracking-widest uppercase text-slate-500 mb-5">Contact</p>
+          <ul className="space-y-4">
+            <li className="flex items-start gap-3 text-slate-400 text-sm">
+              <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0 text-blue-500" />
+              123 School Road, Anna Nagar,<br />Chennai, Tamil Nadu – 600040
+            </li>
+            <li className="flex items-center gap-3 text-slate-400 text-sm">
+              <Phone className="w-4 h-4 flex-shrink-0 text-blue-500" />
+              +91 98765 43210
+            </li>
+            <li className="flex items-center gap-3 text-slate-400 text-sm">
+              <Mail className="w-4 h-4 flex-shrink-0 text-blue-500" />
+              info@educoreshool.edu.in
+            </li>
           </ul>
         </div>
       </div>
-      <div className="border-t border-gray-800 mt-8 pt-6 text-center text-xs text-gray-500">
-        © {new Date().getFullYear()} EduCore School. All rights reserved.
+
+      <div style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <p className="text-slate-600 text-xs">© {new Date().getFullYear()} EduCore School. All rights reserved.</p>
+          <p className="text-slate-700 text-xs">Designed with ❤ for learners everywhere</p>
+        </div>
       </div>
     </footer>
   );

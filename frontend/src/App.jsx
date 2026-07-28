@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuthStore } from './stores/authStore';
 
@@ -32,7 +33,15 @@ import StudentResults     from './pages/student/ResultsPage';
 import StudentFees        from './pages/student/FeesPage';
 
 function RequireAuth({ role, children }) {
-  const { user } = useAuthStore();
+  const { user, loading } = useAuthStore();
+  if (loading) return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="text-center">
+        <div className="w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+        <p className="text-gray-500 text-sm">Loading...</p>
+      </div>
+    </div>
+  );
   if (!user) return <Navigate to="/login" replace />;
   if (role && user.role !== role) {
     return <Navigate to={user.role === 'admin' ? '/admin' : '/student'} replace />;
@@ -41,6 +50,13 @@ function RequireAuth({ role, children }) {
 }
 
 export default function App() {
+  const { token, refreshAuth } = useAuthStore();
+
+  // On every app load, sync user + student profile from the server
+  useEffect(() => {
+    if (token) refreshAuth();
+  }, []);  // eslint-disable-line
+
   return (
     <Routes>
       {/* Public website */}

@@ -5,10 +5,10 @@ import { CalendarCheck, FileText, CreditCard, User } from 'lucide-react';
 import api from '../../lib/axios';
 
 export default function StudentDashboard() {
-  const { user, student } = useAuthStore();
+  const { user, student, loading: authLoading } = useAuthStore();
   const [attSummary, setAttSummary] = useState(null);
-  const [fees, setFees] = useState([]);
-  const [results, setResults] = useState([]);
+  const [fees, setFees]             = useState([]);
+  const [results, setResults]       = useState([]);
 
   useEffect(() => {
     if (!student?._id) return;
@@ -17,9 +17,21 @@ export default function StudentDashboard() {
     api.get('/results').then(r => setResults(r.data.data)).catch(() => {});
   }, [student]);
 
-  const totalDays = attSummary ? attSummary.total : 0;
+  // Still restoring session from server
+  if (authLoading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-center">
+          <div className="w-8 h-8 border-2 border-green-600 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+          <p className="text-gray-500 text-sm">Loading your profile...</p>
+        </div>
+      </div>
+    );
+  }
+
+  const totalDays   = attSummary ? attSummary.total   : 0;
   const presentDays = attSummary ? attSummary.present : 0;
-  const attPct = totalDays ? Math.round((presentDays / totalDays) * 100) : 0;
+  const attPct      = totalDays  ? Math.round((presentDays / totalDays) * 100) : 0;
   const pendingFees = fees.filter(f => f.status !== 'paid').length;
   const latestResult = results[0];
 
@@ -27,12 +39,16 @@ export default function StudentDashboard() {
     <div>
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-gray-900">Welcome, {user?.name}!</h1>
-        {student && (
-          <p className="text-gray-500 text-sm mt-1">Class {student.class}{student.section ? ` – ${student.section}` : ''} | Admission No: {student.admissionNumber}</p>
+        {student ? (
+          <p className="text-gray-500 text-sm mt-1">
+            Class {student.class}{student.section ? ` – ${student.section}` : ''} | Admission No: {student.admissionNumber}
+          </p>
+        ) : (
+          <p className="text-gray-400 text-sm mt-1">Student profile not found — contact your administrator.</p>
         )}
       </div>
 
-      {/* Cards */}
+      {/* Stats cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         <Link to="/student/attendance" className="bg-white rounded-xl border p-5 hover:shadow-sm transition-shadow">
           <div className="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center mb-3">
@@ -70,17 +86,17 @@ export default function StudentDashboard() {
       </div>
 
       {/* Profile summary */}
-      {student && (
+      {student ? (
         <div className="bg-white rounded-xl border p-6">
           <h2 className="font-semibold text-gray-900 mb-4">My Details</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
             {[
-              ['Admission No', student.admissionNumber],
-              ['Class', `${student.class}${student.section ? ` – ${student.section}` : ''}`],
-              ['Roll No', student.rollNumber || '—'],
-              ['Academic Year', student.academicYear],
-              ['Email', student.email],
-              ['Phone', student.phone || '—'],
+              ['Admission No',   student.admissionNumber],
+              ['Class',          `${student.class}${student.section ? ` – ${student.section}` : ''}`],
+              ['Roll No',        student.rollNumber || '—'],
+              ['Academic Year',  student.academicYear],
+              ['Email',          student.email],
+              ['Phone',          student.phone || '—'],
             ].map(([k, v]) => (
               <div key={k}>
                 <p className="text-xs text-gray-500">{k}</p>
@@ -88,6 +104,11 @@ export default function StudentDashboard() {
               </div>
             ))}
           </div>
+        </div>
+      ) : (
+        <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-6 text-center">
+          <p className="text-yellow-800 text-sm font-medium">Student profile not linked to this account.</p>
+          <p className="text-yellow-600 text-xs mt-1">Please contact the school administrator to complete your setup.</p>
         </div>
       )}
     </div>

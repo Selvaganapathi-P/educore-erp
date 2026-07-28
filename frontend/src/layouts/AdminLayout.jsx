@@ -3,7 +3,7 @@ import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../stores/authStore';
 import {
   LayoutDashboard, Users, CalendarCheck, FileText, CreditCard,
-  LogOut, Menu, X, School,
+  LogOut, Menu, School, Bell,
 } from 'lucide-react';
 
 const links = [
@@ -11,7 +11,8 @@ const links = [
   { to: '/admin/students',   label: 'Students',   icon: Users },
   { to: '/admin/attendance', label: 'Attendance', icon: CalendarCheck },
   { to: '/admin/results',    label: 'Results',    icon: FileText },
-  { to: '/admin/fees',       label: 'Fees',       icon: CreditCard },
+  { to: '/admin/fees',           label: 'Fees',          icon: CreditCard },
+  { to: '/admin/announcements',  label: 'Announcements', icon: Bell },
 ];
 
 export default function AdminLayout() {

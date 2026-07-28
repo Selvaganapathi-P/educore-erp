@@ -112,10 +112,13 @@ export default function StudentsPage() {
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
-                      <Link to={`/admin/students/${s._id}/edit`} className="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors">
+                      <Link to={`/admin/students/${s._id}`} className="p-1.5 text-gray-400 hover:text-purple-600 hover:bg-purple-50 rounded transition-colors" title="View profile">
+                        <Eye className="w-4 h-4" />
+                      </Link>
+                      <Link to={`/admin/students/${s._id}/edit`} className="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors" title="Edit">
                         <Edit className="w-4 h-4" />
                       </Link>
-                      <button onClick={() => handleDelete(s._id, s.name)} disabled={deleting === s._id} className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors disabled:opacity-40">
+                      <button onClick={() => handleDelete(s._id, s.name)} disabled={deleting === s._id} className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors disabled:opacity-40" title="Delete">
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>

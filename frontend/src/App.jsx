@@ -13,13 +13,15 @@ import ContactPage    from './pages/public/ContactPage';
 import LoginPage from './pages/auth/LoginPage';
 
 // Admin portal
-import AdminLayout     from './layouts/AdminLayout';
-import AdminDashboard  from './pages/admin/AdminDashboard';
-import StudentsPage    from './pages/admin/StudentsPage';
-import StudentFormPage from './pages/admin/StudentFormPage';
-import AttendancePage  from './pages/admin/AttendancePage';
-import ResultsPage     from './pages/admin/ResultsPage';
-import FeesPage        from './pages/admin/FeesPage';
+import AdminLayout         from './layouts/AdminLayout';
+import AdminDashboard      from './pages/admin/AdminDashboard';
+import StudentsPage        from './pages/admin/StudentsPage';
+import StudentFormPage     from './pages/admin/StudentFormPage';
+import StudentDetailPage   from './pages/admin/StudentDetailPage';
+import AttendancePage      from './pages/admin/AttendancePage';
+import ResultsPage         from './pages/admin/ResultsPage';
+import FeesPage            from './pages/admin/FeesPage';
+import AnnouncementsPage   from './pages/admin/AnnouncementsPage';
 
 // Student portal
 import StudentLayout      from './layouts/StudentLayout';
@@ -41,26 +43,32 @@ function RequireAuth({ role, children }) {
 export default function App() {
   return (
     <Routes>
+      {/* Public website */}
       <Route element={<PublicLayout />}>
         <Route index element={<HomePage />} />
-        <Route path="about"      element={<AboutPage />} />
-        <Route path="facilities" element={<FacilitiesPage />} />
-        <Route path="gallery"    element={<GalleryPage />} />
-        <Route path="contact"    element={<ContactPage />} />
+        <Route path="about"       element={<AboutPage />} />
+        <Route path="facilities"  element={<FacilitiesPage />} />
+        <Route path="gallery"     element={<GalleryPage />} />
+        <Route path="contact"     element={<ContactPage />} />
       </Route>
 
+      {/* Auth */}
       <Route path="login" element={<LoginPage />} />
 
+      {/* Admin portal */}
       <Route path="admin" element={<RequireAuth role="admin"><AdminLayout /></RequireAuth>}>
-        <Route index              element={<AdminDashboard />} />
-        <Route path="students"    element={<StudentsPage />} />
+        <Route index                    element={<AdminDashboard />} />
+        <Route path="students"          element={<StudentsPage />} />
         <Route path="students/new"      element={<StudentFormPage />} />
+        <Route path="students/:id"      element={<StudentDetailPage />} />
         <Route path="students/:id/edit" element={<StudentFormPage />} />
-        <Route path="attendance"  element={<AttendancePage />} />
-        <Route path="results"     element={<ResultsPage />} />
-        <Route path="fees"        element={<FeesPage />} />
+        <Route path="attendance"        element={<AttendancePage />} />
+        <Route path="results"           element={<ResultsPage />} />
+        <Route path="fees"              element={<FeesPage />} />
+        <Route path="announcements"     element={<AnnouncementsPage />} />
       </Route>
 
+      {/* Student portal */}
       <Route path="student" element={<RequireAuth role="student"><StudentLayout /></RequireAuth>}>
         <Route index             element={<StudentDashboard />} />
         <Route path="profile"    element={<StudentProfilePage />} />

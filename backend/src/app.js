@@ -57,6 +57,21 @@ app.use('/api/announcements',  announcementRoutes);
 // Health
 app.get('/health', (_, res) => res.json({ status: 'ok' }));
 
+// One-time seed — creates admin if none exists, safe to call multiple times
+app.get('/api/seed', async (req, res) => {
+  try {
+    const User = require('./models/User');
+    const existing = await User.findOne({ role: 'admin' });
+    if (existing) {
+      return res.json({ success: true, message: 'Admin already exists', email: existing.email });
+    }
+    await User.create({ name: 'School Admin', email: 'admin@school.com', password: 'Admin@123', role: 'admin', status: 'active' });
+    res.json({ success: true, message: 'Admin created', email: 'admin@school.com', password: 'Admin@123' });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
 // 404
 app.use((req, res) => res.status(404).json({ success: false, message: 'Route not found' }));
 

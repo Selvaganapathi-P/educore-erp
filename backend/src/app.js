@@ -65,75 +65,96 @@ app.get('/api/seed', async (req, res) => {
   }
 });
 
-// Seed 10 students per class (Classes 1–10), safe to call multiple times
+// Seed 10 students per class (Classes 1–10) — bulk insert for speed
 app.get('/api/seed-students', async (req, res) => {
   try {
+    const bcrypt  = require('bcryptjs');
+    const mongoose = require('mongoose');
     const User    = require('./models/User');
     const Student = require('./models/Student');
 
-    const firstNames = ['Aarav','Priya','Karthik','Divya','Rahul','Anitha','Vijay','Lakshmi','Arjun','Meena',
-                        'Surya','Kavitha','Dinesh','Nithya','Praveen','Saranya','Arun','Pooja','Naveen','Revathi'];
-    const lastNames  = ['Kumar','Sharma','Patel','Nair','Rajan','Krishnan','Murugan','Subramanian','Pillai','Reddy'];
-
-    const genders    = ['male','female','male','female','male','female','male','female','male','female'];
+    const firstNames  = ['Aarav','Priya','Karthik','Divya','Rahul','Anitha','Vijay','Lakshmi','Arjun','Meena'];
+    const lastNames   = ['Kumar','Sharma','Patel','Nair','Rajan','Krishnan','Murugan','Subramanian','Pillai','Reddy'];
+    const genders     = ['male','female','male','female','male','female','male','female','male','female'];
     const bloodGroups = ['A+','B+','O+','AB+','A-','B-','O-','AB+','A+','B+'];
-    const sections   = ['A','B'];
+    const sections    = ['A','B','A','B','A','B','A','B','A','B'];
     const academicYear = '2025-2026';
-    const classes    = ['1','2','3','4','5','6','7','8','9','10'];
+    const classes     = ['1','2','3','4','5','6','7','8','9','10'];
 
-    let created = 0, skipped = 0;
+    // Hash password once — reuse for all students
+    const hashedPwd = await bcrypt.hash('Student@123', 10);
+
+    // Build all user + student docs
+    const userDocs    = [];
+    const studentMeta = []; // {admNo, cls, i, counter}
+
     let counter = 1;
-
     for (const cls of classes) {
       for (let i = 0; i < 10; i++) {
-        const fn   = firstNames[i];
-        const ln   = lastNames[i % lastNames.length];
-        const name = `${fn} ${ln}`;
-        const admNo = `EDU2025${String(counter).padStart(3,'0')}`;
+        const name  = `${firstNames[i]} ${lastNames[i]}`;
         const email = `student${counter}@school.com`;
-
-        const existingUser = await User.findOne({ email });
-        const existingAdm  = await Student.findOne({ admissionNumber: admNo });
-
-        if (existingUser || existingAdm) { skipped++; counter++; continue; }
-
-        const dob = new Date(2012 - parseInt(cls), i % 12, (i % 28) + 1);
-
-        const user = await User.create({
-          name, email, password: 'Student@123', role: 'student', status: 'active',
+        const admNo = `EDU2025${String(counter).padStart(3,'0')}`;
+        userDocs.push({
+          _id: new mongoose.Types.ObjectId(),
+          name, email, password: hashedPwd, role: 'student', status: 'active',
         });
-
-        await Student.create({
-          userId: user._id,
-          admissionNumber: admNo,
-          name,
-          fatherName:  `${lastNames[i % lastNames.length]} Rajan`,
-          motherName:  `${firstNames[(i + 5) % firstNames.length]} ${lastNames[i % lastNames.length]}`,
-          dateOfBirth: dob,
-          gender:      genders[i],
-          bloodGroup:  bloodGroups[i],
-          phone:       `98${String(4000000000 + counter).slice(1)}`,
-          email,
-          address:     `${counter}, Anna Nagar, Chennai - 600040`,
-          class:       cls,
-          section:     sections[i % 2],
-          rollNumber:  String(i + 1),
-          academicYear,
-          status: 'active',
-        });
-
-        created++;
+        studentMeta.push({ name, email, admNo, cls, i, counter });
         counter++;
       }
     }
 
+    // Skip emails that already exist
+    const existingEmails = new Set(
+      (await User.find({ email: { $in: userDocs.map(u => u.email) } }).select('email')).map(u => u.email)
+    );
+    const existingAdmNos = new Set(
+      (await Student.find({ admissionNumber: { $in: studentMeta.map(s => s.admNo) } }).select('admissionNumber')).map(s => s.admissionNumber)
+    );
+
+    const newUsers    = userDocs.filter(u => !existingEmails.has(u.email));
+    const newStudents = studentMeta.filter(s => !existingEmails.has(s.email) && !existingAdmNos.has(s.admNo));
+
+    if (newUsers.length === 0) {
+      return res.json({ success: true, message: 'All students already seeded', created: 0, skipped: userDocs.length });
+    }
+
+    // Bulk insert users (password already hashed — bypass pre-save hook)
+    await User.insertMany(newUsers, { ordered: false });
+
+    // Map email → _id
+    const userMap = {};
+    newUsers.forEach(u => { userMap[u.email] = u._id; });
+
+    // Build student docs
+    const studentDocs = newStudents.map(({ name, email, admNo, cls, i, counter: c }) => ({
+      userId:          userMap[email],
+      admissionNumber: admNo,
+      name,
+      fatherName:      `${lastNames[i]} Rajan`,
+      motherName:      `${firstNames[(i + 5) % firstNames.length]} ${lastNames[i]}`,
+      dateOfBirth:     new Date(2013 - parseInt(cls), i % 12, (i % 28) + 1),
+      gender:          genders[i],
+      bloodGroup:      bloodGroups[i],
+      phone:           `98${String(4000000000 + c).slice(1)}`,
+      email,
+      address:         `${c}, Anna Nagar, Chennai - 600040`,
+      class:           cls,
+      section:         sections[i],
+      rollNumber:      String(i + 1),
+      academicYear,
+      status:          'active',
+    }));
+
+    await Student.insertMany(studentDocs, { ordered: false });
+
     res.json({
       success: true,
-      message: `Seeding complete`,
-      created,
-      skipped,
-      total: created + skipped,
-      note: 'All student passwords are Student@123',
+      message:  'Seeding complete',
+      created:  newStudents.length,
+      skipped:  userDocs.length - newUsers.length,
+      total:    userDocs.length,
+      note:     'All student passwords: Student@123',
+      sample:   { email: 'student1@school.com', password: 'Student@123' },
     });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });

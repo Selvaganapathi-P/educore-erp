@@ -66,7 +66,7 @@ export default function HomePage() {
         {/* Background photo */}
         <img src={IMG.hero} alt="Selva National School campus" className="absolute inset-0 w-full h-full object-cover object-center" />
         {/* Dark overlay */}
-        <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(5,10,25,0.62) 0%, rgba(5,10,25,0.78) 60%, rgba(5,10,25,0.95) 100%)' }} />
+        <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(5,10,25,0.38) 0%, rgba(5,10,25,0.58) 60%, rgba(5,10,25,0.92) 100%)' }} />
 
         <div className="relative z-10 max-w-4xl mx-auto px-4 text-center pt-20 pb-16">
           <div className="fu1 inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-amber-400/40 bg-amber-400/10 text-amber-300 text-xs font-semibold tracking-widest uppercase mb-8">
@@ -149,7 +149,7 @@ export default function HomePage() {
       ══════════════════════════════════ */}
       <section className="relative py-28 px-4 overflow-hidden">
         <img src={IMG.classroom} alt="classroom" className="absolute inset-0 w-full h-full object-cover object-center" />
-        <div className="absolute inset-0" style={{ background: 'rgba(5,10,25,0.88)' }} />
+        <div className="absolute inset-0" style={{ background: 'rgba(5,10,25,0.68)' }} />
         <div className="relative z-10 max-w-5xl mx-auto">
           <div className="text-center mb-14">
             <span className="text-xs font-semibold tracking-widest uppercase text-amber-400">Why Selva National</span>
@@ -187,7 +187,7 @@ export default function HomePage() {
       ══════════════════════════════════ */}
       <section className="relative py-28 px-4 overflow-hidden">
         <img src={IMG.students} alt="students" className="absolute inset-0 w-full h-full object-cover object-top" />
-        <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, rgba(5,10,35,0.92) 0%, rgba(10,20,50,0.88) 100%)' }} />
+        <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, rgba(5,10,35,0.72) 0%, rgba(10,20,50,0.68) 100%)' }} />
         <div className="relative z-10 max-w-4xl mx-auto">
           <div className="flex items-center gap-3 mb-10">
             <div className="h-px flex-1" style={{ background: 'linear-gradient(to right, transparent, rgba(245,158,11,0.5))' }} />
@@ -219,7 +219,7 @@ export default function HomePage() {
       ══════════════════════════════════ */}
       <section className="relative py-28 px-4 overflow-hidden">
         <img src={IMG.sports} alt="sports" className="absolute inset-0 w-full h-full object-cover object-center" />
-        <div className="absolute inset-0" style={{ background: 'rgba(5,10,25,0.87)' }} />
+        <div className="absolute inset-0" style={{ background: 'rgba(5,10,25,0.67)' }} />
         <div className="relative z-10 max-w-5xl mx-auto text-center">
           <span className="text-xs font-semibold tracking-widest uppercase text-emerald-400">Infrastructure</span>
           <h2 className="text-3xl md:text-4xl font-black mt-3 text-white mb-4">
@@ -256,7 +256,7 @@ export default function HomePage() {
       {announcements.length > 0 && (
         <section className="relative py-24 px-4 overflow-hidden">
           <img src={IMG.library} alt="library" className="absolute inset-0 w-full h-full object-cover" />
-          <div className="absolute inset-0" style={{ background: 'rgba(5,8,20,0.92)' }} />
+          <div className="absolute inset-0" style={{ background: 'rgba(5,8,20,0.72)' }} />
           <div className="relative z-10 max-w-5xl mx-auto">
             <div className="flex items-end justify-between mb-10">
               <div>

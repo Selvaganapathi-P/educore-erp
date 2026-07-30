@@ -70,7 +70,7 @@ export default function FacilitiesPage() {
       ══════════════════════════════ */}
       <section className="relative min-h-[65vh] flex items-center justify-center overflow-hidden pt-16">
         <img src={IMG.hero} alt="Selva National School" className="absolute inset-0 w-full h-full object-cover object-center" />
-        <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(5,10,25,0.50) 0%, rgba(5,10,25,0.78) 65%, rgba(5,10,25,1) 100%)' }} />
+        <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(5,10,25,0.28) 0%, rgba(5,10,25,0.58) 65%, rgba(5,10,25,1) 100%)' }} />
         <div className="relative z-10 text-center px-4 max-w-3xl mx-auto py-20">
           <span className="inline-block text-xs font-semibold tracking-widest uppercase text-emerald-300 border border-emerald-400/30 bg-emerald-400/10 px-4 py-1.5 rounded-full mb-6">Infrastructure</span>
           <h1 className="text-5xl md:text-6xl font-black leading-tight mb-5">
@@ -154,7 +154,7 @@ export default function FacilitiesPage() {
       ══════════════════════════════ */}
       <section className="relative py-24 px-4 overflow-hidden">
         <img src={IMG.smart} alt="smart classroom" className="absolute inset-0 w-full h-full object-cover object-top" />
-        <div className="absolute inset-0" style={{ background: 'rgba(5,10,25,0.88)' }} />
+        <div className="absolute inset-0" style={{ background: 'rgba(5,10,25,0.68)' }} />
         <div className="relative z-10 max-w-5xl mx-auto">
           <div className="grid md:grid-cols-2 gap-16 items-center">
             <div>

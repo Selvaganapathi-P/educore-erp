@@ -14,7 +14,7 @@ export default function AboutPage() {
       ══════════════════════════════ */}
       <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden pt-16">
         <img src={IMG.hero} alt="Selva National School campus" className="absolute inset-0 w-full h-full object-cover object-center" />
-        <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(5,10,25,0.55) 0%, rgba(5,10,25,0.80) 70%, rgba(5,10,25,1) 100%)' }} />
+        <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(5,10,25,0.32) 0%, rgba(5,10,25,0.60) 70%, rgba(5,10,25,1) 100%)' }} />
         <div className="relative z-10 text-center px-4 max-w-3xl mx-auto py-20">
           <span className="inline-block text-xs font-semibold tracking-widest uppercase text-blue-300 border border-blue-400/30 bg-blue-400/10 px-4 py-1.5 rounded-full mb-6">Our Story</span>
           <h1 className="text-5xl md:text-6xl font-black leading-tight mb-5">
@@ -75,7 +75,7 @@ export default function AboutPage() {
       ══════════════════════════════ */}
       <section className="relative py-24 px-4 overflow-hidden">
         <img src={IMG.vision} alt="classroom" className="absolute inset-0 w-full h-full object-cover object-top" />
-        <div className="absolute inset-0" style={{ background: 'rgba(5,10,25,0.90)' }} />
+        <div className="absolute inset-0" style={{ background: 'rgba(5,10,25,0.70)' }} />
         <div className="relative z-10 max-w-5xl mx-auto">
           <div className="text-center mb-14">
             <span className="text-xs font-semibold tracking-widest uppercase text-purple-400">Foundation</span>
@@ -147,7 +147,7 @@ export default function AboutPage() {
       ══════════════════════════════ */}
       <section className="relative py-24 px-4 overflow-hidden">
         <img src={IMG.cultural} alt="school event" className="absolute inset-0 w-full h-full object-cover" />
-        <div className="absolute inset-0" style={{ background: 'rgba(5,8,22,0.91)' }} />
+        <div className="absolute inset-0" style={{ background: 'rgba(5,8,22,0.72)' }} />
         <div className="relative z-10 max-w-5xl mx-auto">
           <div className="text-center mb-12">
             <span className="text-xs font-semibold tracking-widest uppercase text-emerald-400">Team</span>

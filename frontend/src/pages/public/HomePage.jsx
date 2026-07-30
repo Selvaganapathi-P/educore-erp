@@ -3,6 +3,45 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, Bell, BookOpen, Users, Award, Calendar, Shield, Zap, GraduationCap, ChevronRight, Camera } from 'lucide-react';
 import api from '../../lib/axios';
 
+const PHOTOS = [
+  {
+    label: 'Our Campus',
+    sub: 'Est. 2000',
+    url: 'https://images.unsplash.com/photo-1680084521816-cc1ad0433ceb?w=900&q=80&fit=crop',
+    span: 'md:col-span-2 md:row-span-2',
+  },
+  {
+    label: 'Smart Classrooms',
+    sub: 'Interactive Learning',
+    url: 'https://images.unsplash.com/photo-1577896851231-70ef18881754?w=600&q=80&fit=crop',
+    span: '',
+  },
+  {
+    label: 'Sports & Play',
+    sub: 'Active Campus Life',
+    url: 'https://images.unsplash.com/photo-1556863402-b5d84ed0b6d5?w=600&q=80&fit=crop',
+    span: '',
+  },
+  {
+    label: 'Science Labs',
+    sub: 'Hands-on Experiments',
+    url: 'https://images.unsplash.com/photo-1666214280557-f1b5022eb634?w=900&q=80&fit=crop',
+    span: 'md:col-span-2',
+  },
+  {
+    label: 'Cultural Events',
+    sub: 'Annual Celebrations',
+    url: 'https://images.unsplash.com/photo-1759456629068-205f242feccd?w=600&q=80&fit=crop',
+    span: '',
+  },
+  {
+    label: 'Library',
+    sub: '10,000+ Books',
+    url: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=600&q=80&fit=crop',
+    span: '',
+  },
+];
+
 /* ─── Animated counter ─────────────────────────────────── */
 function Counter({ end, suffix = '', prefix = '' }) {
   const [val, setVal] = useState(0);
@@ -47,280 +86,6 @@ function GCard({ icon: Icon, title, desc, color }) {
   );
 }
 
-/* ─── School Scene SVG illustrations ───────────────────── */
-function SceneBuilding() {
-  return (
-    <svg viewBox="0 0 320 220" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-      {/* Sky gradient */}
-      <defs>
-        <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop stopColor="#0D1B3E"/><stop offset="1" stopColor="#1a2d5a"/></linearGradient>
-        <linearGradient id="bldg" x1="0" y1="0" x2="0" y2="1"><stop stopColor="#1e3a6e"/><stop offset="1" stopColor="#152a52"/></linearGradient>
-      </defs>
-      <rect width="320" height="220" fill="url(#sky)"/>
-      {/* Stars */}
-      {[[20,15],[60,8],[100,20],[150,5],[200,18],[250,10],[290,22],[40,35],[180,30],[270,40]].map(([x,y],i)=>(
-        <circle key={i} cx={x} cy={y} r="1" fill="white" opacity={0.5+Math.random()*0.5}/>
-      ))}
-      {/* Ground */}
-      <rect x="0" y="185" width="320" height="35" fill="#0a1628"/>
-      {/* Main building */}
-      <rect x="60" y="90" width="200" height="100" fill="url(#bldg)" rx="2"/>
-      {/* Roof */}
-      <polygon points="50,90 160,45 270,90" fill="#1d3a70"/>
-      {/* Flag pole */}
-      <line x1="160" y1="45" x2="160" y2="20" stroke="#4a7cc7" strokeWidth="1.5"/>
-      <rect x="160" y="20" width="20" height="13" fill="#f59e0b" rx="1"/>
-      {/* Windows row 1 */}
-      {[85,120,155,190,225].map(x=>(
-        <rect key={x} x={x} y="105" width="22" height="18" rx="2" fill="#1e4d8c" opacity="0.9"/>
-      ))}
-      {/* Windows row 2 */}
-      {[85,120,155,190,225].map(x=>(
-        <rect key={x} x={x} y="135" width="22" height="18" rx="2" fill="#1e4d8c" opacity="0.9">
-          <animate attributeName="opacity" values="0.9;0.4;0.9" dur={`${2+Math.random()*3}s`} repeatCount="indefinite"/>
-        </rect>
-      ))}
-      {/* Door */}
-      <rect x="142" y="160" width="36" height="30" rx="3" fill="#0f2347"/>
-      <circle cx="175" cy="175" r="2" fill="#f59e0b"/>
-      {/* Steps */}
-      <rect x="130" y="188" width="60" height="5" rx="1" fill="#1a2d52"/>
-      <rect x="120" y="191" width="80" height="4" rx="1" fill="#152444"/>
-      {/* Trees */}
-      <ellipse cx="25" cy="170" rx="18" ry="22" fill="#14532d" opacity="0.8"/>
-      <rect x="23" y="188" width="4" height="10" fill="#713f12"/>
-      <ellipse cx="295" cy="170" rx="18" ry="22" fill="#14532d" opacity="0.8"/>
-      <rect x="293" y="188" width="4" height="10" fill="#713f12"/>
-      {/* Sign */}
-      <rect x="110" y="178" width="100" height="14" rx="2" fill="#1e3a6e"/>
-      <text x="160" y="188" textAnchor="middle" fill="#93c5fd" fontSize="7" fontFamily="sans-serif" fontWeight="bold">EduCore School</text>
-      {/* Lamp posts */}
-      <line x1="50" y1="185" x2="50" y2="155" stroke="#374151" strokeWidth="2"/>
-      <circle cx="50" cy="153" r="4" fill="#fbbf24" opacity="0.9"/>
-      <line x1="270" y1="185" x2="270" y2="155" stroke="#374151" strokeWidth="2"/>
-      <circle cx="270" cy="153" r="4" fill="#fbbf24" opacity="0.9"/>
-    </svg>
-  );
-}
-
-function SceneClassroom() {
-  return (
-    <svg viewBox="0 0 280 180" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-      <rect width="280" height="180" fill="#0f1f3d"/>
-      {/* Whiteboard */}
-      <rect x="30" y="20" width="220" height="70" rx="4" fill="#1e3a5f"/>
-      <rect x="35" y="25" width="210" height="60" rx="3" fill="#1a3354"/>
-      {/* Board content - math formulas */}
-      <text x="50" y="48" fill="#60a5fa" fontSize="11" fontFamily="monospace">E = mc²</text>
-      <text x="140" y="48" fill="#34d399" fontSize="10" fontFamily="monospace">∑(n) = n(n+1)/2</text>
-      <text x="60" y="68" fill="#a78bfa" fontSize="9" fontFamily="monospace">∫f(x)dx = F(x) + C</text>
-      {/* Desks - row 1 */}
-      {[30,100,170].map(x=>(
-        <g key={x}>
-          <rect x={x} y="115" width="55" height="30" rx="3" fill="#1e3a6e"/>
-          <rect x={x+5} y="143" width="10" height="20" fill="#374151"/>
-          <rect x={x+40} y="143" width="10" height="20" fill="#374151"/>
-          {/* Student head */}
-          <circle cx={x+27} cy="108" r="9" fill="#7c3aed" opacity="0.8"/>
-          <rect x={x+18} y="117" width="18" height="8" rx="2" fill="#6d28d9" opacity="0.7"/>
-        </g>
-      ))}
-      {/* Teacher area */}
-      <rect x="100" y="100" width="80" height="12" rx="2" fill="#1e3a6e" opacity="0.5"/>
-      <circle cx="140" cy="92" r="11" fill="#f59e0b" opacity="0.9"/>
-      <rect x="129" y="103" width="22" height="10" rx="2" fill="#d97706" opacity="0.8"/>
-    </svg>
-  );
-}
-
-function SceneSports() {
-  return (
-    <svg viewBox="0 0 280 180" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-      <defs>
-        <linearGradient id="field" x1="0" y1="0" x2="0" y2="1"><stop stopColor="#14532d"/><stop offset="1" stopColor="#166534"/></linearGradient>
-      </defs>
-      <rect width="280" height="180" fill="#0c1a2e"/>
-      {/* Field */}
-      <rect x="0" y="100" width="280" height="80" fill="url(#field)"/>
-      {/* Field lines */}
-      <line x1="140" y1="100" x2="140" y2="180" stroke="white" strokeWidth="1" opacity="0.3"/>
-      <ellipse cx="140" cy="140" rx="35" ry="25" stroke="white" strokeWidth="1" opacity="0.3" fill="none"/>
-      {/* Goal posts left */}
-      <line x1="15" y1="100" x2="15" y2="130" stroke="white" strokeWidth="2" opacity="0.7"/>
-      <line x1="35" y1="100" x2="35" y2="130" stroke="white" strokeWidth="2" opacity="0.7"/>
-      <line x1="15" y1="100" x2="35" y2="100" stroke="white" strokeWidth="2" opacity="0.7"/>
-      {/* Goal posts right */}
-      <line x1="245" y1="100" x2="245" y2="130" stroke="white" strokeWidth="2" opacity="0.7"/>
-      <line x1="265" y1="100" x2="265" y2="130" stroke="white" strokeWidth="2" opacity="0.7"/>
-      <line x1="245" y1="100" x2="265" y2="100" stroke="white" strokeWidth="2" opacity="0.7"/>
-      {/* Players */}
-      {[[80,115,'#3b82f6'],[140,105,'#ef4444'],[190,120,'#3b82f6'],[110,130,'#ef4444'],[170,135,'#3b82f6']].map(([x,y,c],i)=>(
-        <g key={i}>
-          <circle cx={x} cy={y-12} r="8" fill={c} opacity="0.9"/>
-          <rect x={x-5} y={y-4} width="10" height="14" rx="2" fill={c} opacity="0.8"/>
-        </g>
-      ))}
-      {/* Ball */}
-      <circle cx="140" cy="118" r="6" fill="white" opacity="0.9"/>
-      <path d="M137 115 L143 115 L144 121 L140 124 L136 121 Z" fill="#1f2937" opacity="0.4"/>
-      {/* Sky */}
-      <rect width="280" height="100" fill="#0c1a2e"/>
-      {/* Floodlights */}
-      {[40,240].map(x=>(
-        <g key={x}>
-          <line x1={x} y1="20" x2={x} y2="100" stroke="#374151" strokeWidth="3"/>
-          <rect x={x-12} y="15" width="24" height="10" rx="2" fill="#fbbf24" opacity="0.9"/>
-          <ellipse cx={x} cy="20" rx="30" ry="15" fill="#fbbf24" opacity="0.08"/>
-        </g>
-      ))}
-      {/* Scoreboard */}
-      <rect x="100" y="30" width="80" height="35" rx="4" fill="#1e3a6e"/>
-      <text x="140" y="50" textAnchor="middle" fill="#f59e0b" fontSize="18" fontFamily="monospace" fontWeight="bold">2 : 1</text>
-      <text x="140" y="62" textAnchor="middle" fill="#60a5fa" fontSize="7" fontFamily="sans-serif">SPORTS DAY</text>
-    </svg>
-  );
-}
-
-function SceneLibrary() {
-  return (
-    <svg viewBox="0 0 280 180" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-      <rect width="280" height="180" fill="#1a1030"/>
-      {/* Shelves */}
-      {[0,1,2].map(row=>(
-        <g key={row}>
-          <rect x="10" y={20+row*45} width="260" height="6" rx="2" fill="#374151"/>
-          {/* Books */}
-          {Array.from({length:18}).map((_,i)=>{
-            const colors=['#3b82f6','#ef4444','#10b981','#f59e0b','#8b5cf6','#ec4899','#06b6d4','#84cc16','#f97316'];
-            return <rect key={i} x={12+i*14} y={row*45+26-Math.floor(Math.random()*8+15)} width="10" height={Math.floor(Math.random()*8+15)} rx="1" fill={colors[i%colors.length]} opacity="0.85"/>;
-          })}
-        </g>
-      ))}
-      {/* Reading table */}
-      <rect x="70" y="145" width="140" height="8" rx="3" fill="#374151"/>
-      <rect x="90" y="153" width="8" height="27" fill="#374151"/>
-      <rect x="182" y="153" width="8" height="27" fill="#374151"/>
-      {/* Student reading */}
-      <circle cx="140" cy="133" r="12" fill="#7c3aed"/>
-      <rect x="105" y="138" width="70" height="12" rx="2" fill="#4c1d95" opacity="0.7"/>
-      {/* Open book on table */}
-      <rect x="110" y="140" width="28" height="18" rx="2" fill="#dbeafe"/>
-      <line x1="124" y1="140" x2="124" y2="158" stroke="#93c5fd" strokeWidth="1"/>
-      <rect x="142" y="140" width="28" height="18" rx="2" fill="#dbeafe"/>
-      {/* Lamp */}
-      <line x1="200" y1="153" x2="200" y2="125" stroke="#6b7280" strokeWidth="2"/>
-      <ellipse cx="200" cy="122" rx="15" ry="8" fill="#fbbf24" opacity="0.7"/>
-      <ellipse cx="200" cy="140" rx="30" ry="15" fill="#fbbf24" opacity="0.06"/>
-      {/* Window */}
-      <rect x="220" y="20" width="45" height="60" rx="3" fill="#1e3a6e" opacity="0.6"/>
-      <line x1="242" y1="20" x2="242" y2="80" stroke="#4a7cc7" strokeWidth="1" opacity="0.5"/>
-      <line x1="220" y1="50" x2="265" y2="50" stroke="#4a7cc7" strokeWidth="1" opacity="0.5"/>
-      {/* Moon outside window */}
-      <circle cx="245" cy="38" r="8" fill="#fbbf24" opacity="0.6"/>
-      <circle cx="249" cy="35" r="6" fill="#1e3a6e" opacity="0.8"/>
-    </svg>
-  );
-}
-
-function SceneLab() {
-  return (
-    <svg viewBox="0 0 280 180" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-      <rect width="280" height="180" fill="#0d1f3d"/>
-      {/* Lab bench */}
-      <rect x="20" y="110" width="240" height="12" rx="3" fill="#1e3a6e"/>
-      {/* Microscope */}
-      <rect x="40" y="85" width="10" height="30" rx="2" fill="#6b7280"/>
-      <rect x="30" y="80" width="30" height="10" rx="2" fill="#9ca3af"/>
-      <circle cx="45" cy="75" r="10" fill="#374151"/>
-      <circle cx="45" cy="75" r="6" fill="#1e3a6e"/>
-      <circle cx="45" cy="75" r="3" fill="#60a5fa" opacity="0.8"/>
-      {/* Beakers */}
-      <path d="M90 108 L95 90 L105 90 L110 108 Z" fill="#3b82f6" opacity="0.5"/>
-      <rect x="90" y="88" width="20" height="5" rx="1" fill="#6b7280"/>
-      <path d="M90 108 L95 90 L105 90 L110 108 Z" fill="none" stroke="#60a5fa" strokeWidth="1.5"/>
-      {/* Bubbles in beaker */}
-      <circle cx="97" cy="100" r="2" fill="#93c5fd" opacity="0.6"/>
-      <circle cx="103" cy="95" r="1.5" fill="#93c5fd" opacity="0.6"/>
-      {/* Flask */}
-      <path d="M135 92 L135 108 L120 122 L155 122 L140 108 L140 92 Z" fill="#10b981" opacity="0.4"/>
-      <rect x="132" y="89" width="11" height="5" rx="1" fill="#6b7280"/>
-      <path d="M135 92 L135 108 L120 122 L155 122 L140 108 L140 92 Z" fill="none" stroke="#34d399" strokeWidth="1.5"/>
-      {/* Bunsen burner */}
-      <rect x="175" y="100" width="12" height="15" rx="2" fill="#374151"/>
-      <ellipse cx="181" cy="99" rx="6" ry="3" fill="#f59e0b" opacity="0.8">
-        <animate attributeName="opacity" values="0.8;0.3;0.8" dur="1s" repeatCount="indefinite"/>
-      </ellipse>
-      <ellipse cx="181" cy="97" rx="3" ry="4" fill="#ef4444" opacity="0.6">
-        <animate attributeName="opacity" values="0.6;0.2;0.6" dur="0.8s" repeatCount="indefinite"/>
-      </ellipse>
-      {/* Test tubes rack */}
-      {[210,220,230].map((x,i)=>(
-        <g key={x}>
-          <rect x={x} y={90+i*2} width="8" height="25" rx="4" fill={['#3b82f6','#10b981','#f59e0b'][i]} opacity="0.6"/>
-          <rect x={x} y={88} width="8" height="5" rx="1" fill="#6b7280"/>
-        </g>
-      ))}
-      {/* Periodic table poster */}
-      <rect x="20" y="15" width="100" height="60" rx="3" fill="#1e3a6e" opacity="0.7"/>
-      <text x="70" y="30" textAnchor="middle" fill="#60a5fa" fontSize="7" fontFamily="monospace">PERIODIC TABLE</text>
-      {[0,1,2,3].map(r=>
-        [0,1,2,3,4].map(c=>(
-          <rect key={`${r}${c}`} x={22+c*18} y={35+r*11} width="15" height="9" rx="1" fill={['#3b82f6','#10b981','#f59e0b','#8b5cf6','#ef4444'][c]} opacity="0.4"/>
-        ))
-      )}
-      {/* Students */}
-      <circle cx="70" cy="80" r="10" fill="#7c3aed" opacity="0.9"/>
-      <rect x="60" y="90" width="20" height="22" rx="3" fill="#6d28d9" opacity="0.8"/>
-      <circle cx="190" cy="80" r="10" fill="#0891b2" opacity="0.9"/>
-      <rect x="180" y="90" width="20" height="22" rx="3" fill="#0e7490" opacity="0.8"/>
-    </svg>
-  );
-}
-
-function SceneAnnualDay() {
-  return (
-    <svg viewBox="0 0 280 180" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-      <rect width="280" height="180" fill="#1a0a30"/>
-      {/* Stage */}
-      <rect x="0" y="120" width="280" height="60" fill="#2d1b4e"/>
-      <rect x="0" y="115" width="280" height="10" rx="2" fill="#4c1d95"/>
-      {/* Curtains */}
-      <path d="M0 0 Q30 60 0 120" fill="#7c2d12" opacity="0.9"/>
-      <path d="M280 0 Q250 60 280 120" fill="#7c2d12" opacity="0.9"/>
-      {/* Spotlight beams */}
-      <polygon points="60,0 20,120 100,120" fill="#fbbf24" opacity="0.08"/>
-      <polygon points="140,0 110,120 170,120" fill="white" opacity="0.06"/>
-      <polygon points="220,0 180,120 260,120" fill="#fbbf24" opacity="0.08"/>
-      {/* Performers */}
-      {[[90,95,'#ec4899'],[140,88,'#f59e0b'],[190,95,'#3b82f6']].map(([x,y,c],i)=>(
-        <g key={i}>
-          <circle cx={x} cy={y-15} r="11" fill={c} opacity="0.9"/>
-          <path d={`M${x-10} ${y} Q${x} ${y+20} ${x+10} ${y}`} fill={c} opacity="0.8"/>
-          {/* Arms up */}
-          <line x1={x-10} y1={y-5} x2={x-22} y2={y-20} stroke={c} strokeWidth="3" strokeLinecap="round" opacity="0.8"/>
-          <line x1={x+10} y1={y-5} x2={x+22} y2={y-20} stroke={c} strokeWidth="3" strokeLinecap="round" opacity="0.8"/>
-        </g>
-      ))}
-      {/* Audience silhouettes */}
-      {[20,50,80,110,145,175,205,235,260].map((x,i)=>(
-        <g key={x}>
-          <circle cx={x} cy={148} r={7+i%3} fill="#1e1b4b" opacity="0.9"/>
-          <rect x={x-6} y={155} width="12" height="15" rx="2" fill="#1e1b4b" opacity="0.8"/>
-        </g>
-      ))}
-      {/* Stars / confetti */}
-      {[[50,20,'#f59e0b'],[100,15,'#ec4899'],[160,25,'#60a5fa'],[210,12,'#34d399'],[250,30,'#a78bfa']].map(([x,y,c],i)=>(
-        <circle key={i} cx={x} cy={y} r="3" fill={c} opacity="0.8">
-          <animate attributeName="cy" values={`${y};${y+8};${y}`} dur={`${1.5+i*0.3}s`} repeatCount="indefinite"/>
-        </circle>
-      ))}
-      {/* Banner */}
-      <rect x="60" y="5" width="160" height="22" rx="3" fill="#312e81"/>
-      <text x="140" y="20" textAnchor="middle" fill="#fbbf24" fontSize="9" fontFamily="sans-serif" fontWeight="bold">ANNUAL DAY 2025</text>
-    </svg>
-  );
-}
-
 const CAT_COLORS = { general: 'bg-slate-700 text-slate-300', exam: 'bg-blue-900/60 text-blue-300', event: 'bg-purple-900/60 text-purple-300', holiday: 'bg-emerald-900/60 text-emerald-300', result: 'bg-amber-900/60 text-amber-300' };
 
 export default function HomePage() {
@@ -329,14 +94,6 @@ export default function HomePage() {
     api.get('/public/announcements?limit=4').then(r => setAnnouncements(r.data.data)).catch(() => {});
   }, []);
 
-  const photos = [
-    { label: 'School Campus',    sub: 'Est. 2000',          scene: <SceneBuilding />,  span: 'md:col-span-2 md:row-span-2', accent: '#1D4ED8' },
-    { label: 'Smart Classrooms', sub: 'Interactive Learning', scene: <SceneClassroom />, span: '',                            accent: '#7C3AED' },
-    { label: 'Sports Day',       sub: 'Annual Tournament',   scene: <SceneSports />,    span: '',                            accent: '#059669' },
-    { label: 'Science Lab',      sub: 'Hands-on Experiments',scene: <SceneLab />,       span: 'md:col-span-2',               accent: '#0891B2' },
-    { label: 'Annual Day',       sub: 'Cultural Celebration', scene: <SceneAnnualDay />, span: '',                            accent: '#9333EA' },
-    { label: 'Library',          sub: '10,000+ Books',        scene: <SceneLibrary />,   span: '',                            accent: '#B45309' },
-  ];
 
   return (
     <div className="bg-[#0A0F1E] text-white">
@@ -432,24 +189,29 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 auto-rows-[180px]">
-            {photos.map(({ label, sub, scene, span, accent }) => (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 auto-rows-[200px]">
+            {PHOTOS.map(({ label, sub, url, span }) => (
               <div key={label}
                 className={`photo-card relative rounded-2xl overflow-hidden cursor-pointer ${span}`}
                 style={{ border: '1px solid rgba(255,255,255,0.07)' }}>
-                {/* Scene */}
-                <div className="photo-scene absolute inset-0">{scene}</div>
-                {/* Gradient overlay always */}
-                <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 55%)' }} />
-                {/* Hover overlay */}
-                <div className="photo-overlay absolute inset-0 opacity-0 transition-opacity duration-300" style={{ background: `rgba(${accent === '#1D4ED8' ? '29,78,216' : accent === '#7C3AED' ? '124,58,237' : accent === '#059669' ? '5,150,105' : accent === '#0891B2' ? '8,145,178' : accent === '#9333EA' ? '147,51,234' : '180,83,9'},0.15)` }} />
+                {/* Real photo */}
+                <img
+                  src={url}
+                  alt={label}
+                  className="photo-scene absolute inset-0 w-full h-full object-cover"
+                  loading="lazy"
+                />
+                {/* Dark gradient so text is readable */}
+                <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.2) 50%, transparent 100%)' }} />
+                {/* Hover tint */}
+                <div className="photo-overlay absolute inset-0 opacity-0 transition-opacity duration-300" style={{ background: 'rgba(29,78,216,0.18)' }} />
                 {/* Label */}
                 <div className="absolute bottom-0 left-0 right-0 p-4">
-                  <p className="font-bold text-white text-sm leading-tight">{label}</p>
+                  <p className="font-bold text-white text-sm leading-tight drop-shadow">{label}</p>
                   <p className="text-white/60 text-xs mt-0.5">{sub}</p>
                 </div>
-                {/* Corner badge */}
-                <div className="absolute top-3 right-3 w-6 h-6 rounded-full flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(4px)' }}>
+                {/* Camera badge */}
+                <div className="absolute top-3 right-3 w-6 h-6 rounded-full flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.45)', backdropFilter: 'blur(4px)' }}>
                   <Camera className="w-3 h-3 text-white/70" />
                 </div>
               </div>

@@ -37,7 +37,7 @@ export default function FacilitiesPage() {
             }}>Facilities</span>
           </h1>
           <p className="text-slate-400 mt-5 text-base leading-relaxed max-w-xl mx-auto">
-            Every resource at EduCore School is designed to support learning, creativity, health, and holistic development.
+            Every resource at Selva National School is designed to support learning, creativity, health, and holistic development.
           </p>
         </div>
       </div>

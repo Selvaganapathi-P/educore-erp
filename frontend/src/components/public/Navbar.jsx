@@ -39,9 +39,9 @@ export default function Navbar() {
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2.5 group">
           <div className="w-8 h-8 rounded-lg flex items-center justify-center font-black text-white text-base"
-            style={{ background: 'linear-gradient(135deg,#1D4ED8,#7C3AED)' }}>E</div>
+            style={{ background: 'linear-gradient(135deg,#1D4ED8,#7C3AED)' }}>S</div>
           <span className="font-bold text-white text-base tracking-tight">
-            EduCore <span className="text-slate-400 font-medium">School</span>
+            Selva National <span className="text-slate-400 font-medium">School</span>
           </span>
         </Link>
 

@@ -17,8 +17,8 @@ export default function Footer() {
         <div>
           <div className="flex items-center gap-2.5 mb-4">
             <div className="w-8 h-8 rounded-lg flex items-center justify-center font-black text-white"
-              style={{ background: 'linear-gradient(135deg,#1D4ED8,#7C3AED)' }}>E</div>
-            <span className="font-bold text-white">EduCore School</span>
+              style={{ background: 'linear-gradient(135deg,#1D4ED8,#7C3AED)' }}>S</div>
+            <span className="font-bold text-white">Selva National School</span>
           </div>
           <p className="text-slate-500 text-sm leading-relaxed">
             Empowering students with knowledge, character, and a love for lifelong learning since 1999.
@@ -70,7 +70,7 @@ export default function Footer() {
 
       <div style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-slate-600 text-xs">© {new Date().getFullYear()} EduCore School. All rights reserved.</p>
+          <p className="text-slate-600 text-xs">© {new Date().getFullYear()} Selva National School. All rights reserved.</p>
           <p className="text-slate-700 text-xs">Designed with ❤ for learners everywhere</p>
         </div>
       </div>

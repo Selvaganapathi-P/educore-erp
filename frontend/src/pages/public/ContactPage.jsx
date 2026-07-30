@@ -53,7 +53,7 @@ export default function ContactPage() {
               {[
                 [MapPin, 'amber', '123 School Road, Anna Nagar\nChennai, Tamil Nadu – 600040'],
                 [Phone, 'blue', '+91 98765 43210\n+91 44 2345 6789'],
-                [Mail, 'purple', 'info@educoreshool.edu.in\nadmissions@educoreshool.edu.in'],
+                [Mail, 'purple', 'info@selvanationalschool.edu.in\nadmissions@selvanationalschool.edu.in'],
                 [Clock, 'emerald', 'Mon – Fri: 8:00 AM – 4:30 PM\nSaturday: 8:00 AM – 1:00 PM'],
               ].map(([Icon, color, text]) => {
                 const clr = { amber: '#F59E0B', blue: '#60A5FA', purple: '#A78BFA', emerald: '#34D399' };
@@ -74,7 +74,7 @@ export default function ContactPage() {
               <h3 className="font-bold text-white mb-2">Admissions Enquiries</h3>
               <p className="text-slate-400 text-sm leading-relaxed">
                 Visit the school office between <span className="text-white">9 AM – 2 PM</span> on school days,
-                or email <span className="text-blue-400">admissions@educoreshool.edu.in</span>
+                or email <span className="text-blue-400">admissions@selvanationalschool.edu.in</span>
               </p>
             </div>
           </div>

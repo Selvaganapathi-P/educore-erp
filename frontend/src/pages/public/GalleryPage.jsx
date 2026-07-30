@@ -30,10 +30,10 @@ export default function GalleryPage() {
             <span style={{
               background: 'linear-gradient(90deg,#A78BFA,#818CF8)',
               WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
-            }}>EduCore</span>
+            }}>Selva National School</span>
           </h1>
           <p className="text-slate-400 mt-4 text-base max-w-xl mx-auto leading-relaxed">
-            Glimpses of achievement, joy, and community — celebrating the vibrant life at EduCore School.
+            Glimpses of achievement, joy, and community — celebrating the vibrant life at Selva National School School.
           </p>
         </div>
       </div>

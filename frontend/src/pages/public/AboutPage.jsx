@@ -37,7 +37,7 @@ export default function AboutPage() {
             <span style={{
               background: 'linear-gradient(90deg,#60A5FA,#818CF8)',
               WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
-            }}>EduCore School</span>
+            }}>Selva National School School</span>
           </h1>
           <p className="text-slate-400 mt-5 text-base leading-relaxed">
             25 years of nurturing minds, shaping futures, and building a community that believes every child matters.
@@ -52,11 +52,11 @@ export default function AboutPage() {
             <h2 className="text-2xl font-black text-white mb-5">A Legacy Built Over 25 Years</h2>
             <p className="text-slate-400 leading-relaxed mb-4">
               Founded in 1999 with just 50 students and a vision to provide quality education in an inclusive environment,
-              EduCore School has grown into a vibrant community of over 1,200 students from Classes 1 to 12.
+              Selva National School School has grown into a vibrant community of over 1,200 students from Classes 1 to 12.
             </p>
             <p className="text-slate-400 leading-relaxed">
               Over the decades, our alumni have gone on to excel in medicine, engineering, arts, sports, and public service —
-              carrying with them the values and curiosity that EduCore instilled.
+              carrying with them the values and curiosity that Selva National School instilled.
             </p>
           </div>
           <div className="rounded-2xl p-10 text-center relative overflow-hidden"
